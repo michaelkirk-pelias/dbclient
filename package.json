@@ -37,8 +37,8 @@
   },
   "dependencies": {
     "@hapi/joi": "^16.0.0",
-    "elasticsearch": "^16.0.0",
-    "pelias-config": "^6.0.0",
+    "@elastic/elasticsearch": "~7.17.0",
+    "pelias-config": "https://github.com/michaelkirk-pelias/config#mkirk/elastic8",
     "pelias-logger": "^1.2.1",
     "through2": "^3.0.0"
   },

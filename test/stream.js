@@ -31,7 +31,9 @@ module.exports.tests.functional_example = function(test, common) {
       bulk: function( batch, cb ){
         setTimeout( function(){
           finished = true;
-          cb(null);
+          // REVIEW: Does this stubbing match the new elasticsearch client API?
+          // I was expecting something like (err, { body } )
+          cb(null, { });
         }, 500 );
       },
       close: function(){

@@ -9,7 +9,9 @@ module.exports.tests = {};
 module.exports.tests.validate = function(test, common) {
   test('config without dbclient should throw error', function(t) {
     var config = {
-      esclient: {},
+      esclient: {
+        node: 'http://localhost:9200'
+      },
       schema: {
         indexName: 'example_index'
       }
@@ -27,7 +29,9 @@ module.exports.tests.validate = function(test, common) {
       dbclient: {
         batchSize: 500
       },
-      esclient: {},
+      esclient: {
+        node: 'http://localhost:9200'
+      },
       schema: {
         indexName: 'example_index'
       }
@@ -47,7 +51,9 @@ module.exports.tests.validate = function(test, common) {
           statFrequency: value,
           batchSize: 500
         },
-        esclient: {},
+        esclient: {
+          node: 'http://localhost:9200'
+        },
         schema: {
           indexName: 'example_index'
         }
@@ -69,7 +75,9 @@ module.exports.tests.validate = function(test, common) {
         statFrequency: 17.3,
         batchSize: 500
       },
-      esclient: {},
+      esclient: {
+        node: 'http://localhost:9200'
+      },
       schema: {
         indexName: 'example_index'
       }
@@ -88,7 +96,9 @@ module.exports.tests.validate = function(test, common) {
       dbclient: {
         statFrequency: 100,
       },
-      esclient: {},
+      esclient: {
+        node: 'http://localhost:9200'
+      },
       schema: {
         indexName: 'example_index'
       }
@@ -108,7 +118,9 @@ module.exports.tests.validate = function(test, common) {
           statFrequency: 100,
           batchSize: value
         },
-        esclient: {},
+        esclient: {
+          node: 'http://localhost:9200'
+        },
         schema: {
           indexName: 'example_index'
         }
@@ -130,7 +142,9 @@ module.exports.tests.validate = function(test, common) {
         statFrequency: 17,
         batchSize: 50.5
       },
-      esclient: {},
+      esclient: {
+        node: 'http://localhost:9200'
+      },
       schema: {
         indexName: 'example_index'
       }
@@ -175,6 +189,7 @@ module.exports.tests.validate = function(test, common) {
           batchSize: 500
         },
         esclient: {
+          node: 'http://localhost:9200',
           requestTimeout: value
         },
         schema: {
@@ -198,6 +213,7 @@ module.exports.tests.validate = function(test, common) {
         batchSize: 500
       },
       esclient: {
+        node: 'http://localhost:9200',
         requestTimeout: 17.3
       },
       schema: {
@@ -220,6 +236,7 @@ module.exports.tests.validate = function(test, common) {
         batchSize: 500
       },
       esclient: {
+        node: 'http://localhost:9200',
         requestTimeout: -1
       },
       schema: {
@@ -242,7 +259,9 @@ module.exports.tests.validate = function(test, common) {
           statFrequency: 0,
           batchSize: 500
         },
-        esclient: {},
+        esclient: {
+          node: 'http://localhost:9200'
+        },
         schema: value
       };
 
@@ -263,7 +282,9 @@ module.exports.tests.validate = function(test, common) {
           statFrequency: 0,
           batchSize: 500
         },
-        esclient: {},
+        esclient: {
+          node: 'http://localhost:9200'
+        },
         schema: {
           indexName: value
         }
@@ -285,7 +306,9 @@ module.exports.tests.validate = function(test, common) {
         statFrequency: 0,
         batchSize: 500
       },
-      esclient: {},
+      esclient: {
+        node: 'http://localhost:9200'
+      },
       schema: {}
     };
 
@@ -302,7 +325,9 @@ module.exports.tests.validate = function(test, common) {
         statFrequency: 0,
         batchSize: 500
       },
-      esclient: {},
+      esclient: {
+        node: 'http://localhost:9200'
+      },
       schema: {
         indexName: 'example_index'
       }
@@ -310,9 +335,9 @@ module.exports.tests.validate = function(test, common) {
 
     t.doesNotThrow(function() {
       proxyquire('../src/configValidation', {
-        'elasticsearch': {
+        '@elastic/elasticsearch': {
           Client: function() {
-            return { indices: { exists: (indexName, cb) => { cb(false, true); } } };
+            return { indices: { exists: (indexName, cb) => { cb(false, { body: true }); } } };
           }
         }
       }).validate(config);
@@ -329,6 +354,7 @@ module.exports.tests.validate = function(test, common) {
         batchSize: 500
       },
       esclient: {
+        node: 'http://localhost:9200',
         requestTimeout: 17
       },
       schema: {
@@ -338,9 +364,9 @@ module.exports.tests.validate = function(test, common) {
 
     t.doesNotThrow(() => {
       proxyquire('../src/configValidation', {
-        'elasticsearch': {
+        '@elastic/elasticsearch': {
           Client: function() {
-            return { indices: { exists: (indexName, cb) => { cb(false, true); } } };
+            return { indices: { exists: (indexName, cb) => { cb(false, { body: true }); } } };
           }
         }
       }).validate(config);
@@ -358,6 +384,7 @@ module.exports.tests.validate = function(test, common) {
         batchSize: 500
       },
       esclient: {
+        node: 'http://localhost:9200',
         requestTimeout: 17
       },
       schema: {
@@ -375,9 +402,9 @@ module.exports.tests.validate = function(test, common) {
 
     t.throws(() => {
       proxyquire('../src/configValidation', {
-        'elasticsearch': {
+        '@elastic/elasticsearch': {
           Client: function() {
-            return { indices: { exists: (indexName, cb) => { cb(false, false); } } };
+            return { indices: { exists: (indexName, cb) => { cb(false, { body: false }); } } };
           }
         }
       }).validate(config);

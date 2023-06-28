@@ -31,7 +31,7 @@ const Document = require('pelias-model').Document;
 const dbMapper = require('pelias-model').createDocumentMapperStream;
 const dbclient = require('pelias-dbclient');
 
-const elasticsearch = require('elasticsearch');
+const elasticsearch = require('@elastic/elasticsearch');
 const config = require('pelias-config').generate();
 const elasticDeleteQuery = require('elastic-deletebyquery');
 

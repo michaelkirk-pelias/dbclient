@@ -1,7 +1,7 @@
 'use strict';
 
 const Joi = require('@hapi/joi');
-const elasticsearch = require('elasticsearch');
+const elasticsearch = require('@elastic/elasticsearch');
 
 // Schema Configuration
 // dbclient.statFrequency: populated by defaults if not overridden
@@ -12,8 +12,10 @@ const schema = Joi.object().keys({
     batchSize: Joi.number().integer().min(0).required()
   }),
   esclient: Joi.object().required().keys({
+    node: Joi.string(),
+    nodes: Joi.array().items(Joi.string()).min(1),
     requestTimeout: Joi.number().integer().min(0)
-  }).unknown(true),
+  }).xor('node', 'nodes').unknown(true),
   schema: Joi.object().keys({
     indexName: Joi.string().required()
   })
@@ -30,7 +32,7 @@ module.exports = {
     const esclient = new elasticsearch.Client(config.esclient);
 
     // callback that throws an error if the index doesn't exist
-    const existsCallback = (error, exists) => {
+    const existsCallback = (error, { body: exists }) => {
       if (!exists) {
         console.error(`ERROR: Elasticsearch index ${config.schema.indexName} does not exist`);
         console.error('You must use the pelias-schema tool (https://github.com/pelias/schema/) to create the index first');

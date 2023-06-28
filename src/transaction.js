@@ -33,7 +33,7 @@ function wrapper( client, parent_logger ){
     }
 
     // perform bulk operation
-    client.bulk( { body: payload }, function( err, resp ){
+    client.bulk( { body: payload }, function( err, { body }){
 
       // major error
       if( err ){
@@ -42,7 +42,7 @@ function wrapper( client, parent_logger ){
       }
 
       // response does not contain items
-      if( !resp || !resp.items ){
+      if( !body || !body.items ){
         logger.error( 'invalid resp from es bulk index operation' );
         batch.status = 500;
       }
@@ -52,7 +52,7 @@ function wrapper( client, parent_logger ){
 
         // console.log( resp.items.length, batch._slots.length, payload.length );
 
-        resp.items.forEach( function( item, i ){
+        body.items.forEach( function( item, i ){
 
           var action = item.hasOwnProperty('create') ? item.create : item.index;
 

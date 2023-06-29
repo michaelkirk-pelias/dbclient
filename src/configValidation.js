@@ -1,7 +1,7 @@
 'use strict';
 
 const Joi = require('@hapi/joi');
-const elasticsearch = require('@elastic/elasticsearch');
+const buildClient = require('pelias-elasticsearch');
 
 // Schema Configuration
 // dbclient.statFrequency: populated by defaults if not overridden
@@ -29,7 +29,7 @@ module.exports = {
     }
 
     // now verify that the index exists
-    const esclient = new elasticsearch.Client(config.esclient);
+    const esclient = buildClient(config.esclient);
 
     // callback that throws an error if the index doesn't exist
     const existsCallback = (error, { body: exists }) => {

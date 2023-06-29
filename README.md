@@ -31,7 +31,7 @@ const Document = require('pelias-model').Document;
 const dbMapper = require('pelias-model').createDocumentMapperStream;
 const dbclient = require('pelias-dbclient');
 
-const elasticsearch = require('@elastic/elasticsearch');
+const buildClient = require('pelias-elasticsearch');
 const config = require('pelias-config').generate();
 const elasticDeleteQuery = require('elastic-deletebyquery');
 
@@ -48,7 +48,7 @@ const stream = streamify([1, 2, 3])
   .pipe(dbclient()); // put documents into elasticsearch
 
 stream.on('finish', () => {
-  const client = new elasticsearch.Client(config.esclient);
+  const client = buildClient(config.esclient);
   elasticDeleteQuery(client);
 
   const options = {

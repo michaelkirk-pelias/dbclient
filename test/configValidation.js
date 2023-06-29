@@ -335,10 +335,8 @@ module.exports.tests.validate = function(test, common) {
 
     t.doesNotThrow(function() {
       proxyquire('../src/configValidation', {
-        '@elastic/elasticsearch': {
-          Client: function() {
-            return { indices: { exists: (indexName, cb) => { cb(false, { body: true }); } } };
-          }
+        'pelias-elasticsearch': () => {
+          return { indices: { exists: (indexName, cb) => { cb(false, { body: true }); } } };
         }
       }).validate(config);
     }, 'no error should have been thrown');
@@ -364,10 +362,8 @@ module.exports.tests.validate = function(test, common) {
 
     t.doesNotThrow(() => {
       proxyquire('../src/configValidation', {
-        '@elastic/elasticsearch': {
-          Client: function() {
-            return { indices: { exists: (indexName, cb) => { cb(false, { body: true }); } } };
-          }
+        'pelias-elasticsearch': () => {
+          return { indices: { exists: (indexName, cb) => { cb(false, { body: true }); } } };
         }
       }).validate(config);
 
@@ -396,22 +392,19 @@ module.exports.tests.validate = function(test, common) {
 
     // intercept/swallow stderr
     var unhook_intercept = intercept(
-      function() { },
-      function(txt) { stderr += txt; return ''; }
+      () => { },
+      (txt) => { stderr += txt; return ''; }
     );
 
     t.throws(() => {
       proxyquire('../src/configValidation', {
-        '@elastic/elasticsearch': {
-          Client: function() {
-            return { indices: { exists: (indexName, cb) => { cb(false, { body: false }); } } };
-          }
+        'pelias-elasticsearch': () => {
+          return { indices: { exists: (indexName, cb) => { cb(false, { body: false }); } } };
         }
       }).validate(config);
-
     }, /elasticsearch index example_index does not exist/);
 
-    t.ok(stderr.match(/ERROR: Elasticsearch index example_index does not exist/));
+    t.match(stderr, /ERROR: Elasticsearch index example_index does not exist/);
 
     unhook_intercept();
     t.end();

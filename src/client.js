@@ -1,6 +1,7 @@
-const elasticsearch = require('@elastic/elasticsearch');
+const buildClient = require('pelias-elasticsearch');
 const settings = require('pelias-config').generate();
 
+// REVIEW: Do we even need this module? Can we instead transition callers to pelias-elasticsearch?
 module.exports = function(){
-  return new elasticsearch.Client( settings.esclient || {} );
+  return buildClient(settings.esclient || {} );
 };
